@@ -1,16 +1,21 @@
 import { useState, useEffect } from 'react'
-import { API_ENDPOINTS, fetchData } from '../api'
+import { fetchData } from '../api'
 
 export default function Leaderboard() {
   const [leaderboard, setLeaderboard] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  
+  // API endpoint with Codespaces support
+  const apiEndpoint = import.meta.env.VITE_CODESPACE_NAME
+    ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/leaderboard`
+    : 'http://localhost:8000/api/leaderboard'
 
   useEffect(() => {
     const loadLeaderboard = async () => {
       try {
         setLoading(true)
-        const data = await fetchData(API_ENDPOINTS.leaderboard)
+        const data = await fetchData(apiEndpoint)
         setLeaderboard(Array.isArray(data) ? data : [])
       } catch (err) {
         setError(err.message)
