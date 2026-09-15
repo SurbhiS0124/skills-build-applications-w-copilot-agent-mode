@@ -1,16 +1,21 @@
 import { useState, useEffect } from 'react'
-import { API_ENDPOINTS, fetchData } from '../api'
+import { fetchData } from '../api'
 
 export default function Activities() {
   const [activities, setActivities] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  
+  // API endpoint with Codespaces support
+  const apiEndpoint = import.meta.env.VITE_CODESPACE_NAME
+    ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/activities`
+    : 'http://localhost:8000/api/activities'
 
   useEffect(() => {
     const loadActivities = async () => {
       try {
         setLoading(true)
-        const data = await fetchData(API_ENDPOINTS.activities)
+        const data = await fetchData(apiEndpoint)
         setActivities(Array.isArray(data) ? data : [])
       } catch (err) {
         setError(err.message)
