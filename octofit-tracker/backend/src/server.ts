@@ -6,9 +6,9 @@ const app: Express = express()
 const PORT = 8000
 const MONGODB_URI = 'mongodb://localhost:27017/octofit-tracker'
 
-// Environment detection
-const isCodespace = !!process.env.CODESPACE_NAME
-const CODESPACE_NAME = process.env.CODESPACE_NAME || 'localhost'
+// Environment detection for Codespaces
+const CODESPACE_NAME = process.env.CODESPACE_NAME
+const isCodespace = !!CODESPACE_NAME
 const API_BASE_URL = isCodespace 
   ? `https://${CODESPACE_NAME}-8000.app.github.dev`
   : `http://localhost:${PORT}`
@@ -19,9 +19,9 @@ app.use(cors({
   origin: [
     `http://localhost:3000`,
     `http://localhost:5173`,
-    `https://${CODESPACE_NAME}-5173.app.github.dev`,
+    isCodespace ? `https://${CODESPACE_NAME}-5173.app.github.dev` : undefined,
     API_BASE_URL
-  ],
+  ].filter(Boolean),
   credentials: true
 }))
 
